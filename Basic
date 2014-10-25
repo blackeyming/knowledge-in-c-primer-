@@ -1,0 +1,112 @@
+1. 共用体：能同时存储不同的数据类型（只能是int, long 或 double），但是只能同时存储其中的一种类型。长度为其最大的成员长度
+  union one4all
+  {
+    int int_val;
+    double double_val;
+    long long_val;
+  };
+  one4all lei;
+  lei.int_val=1;
+  cout<<lei.int_val;
+2.结构体：结构体可以同时存储int, long 和double； 
+3.枚举： 可以替代const创建符号常量，
+ enum color{red, yellow, green, black,white};
+ color mycolor=red;
+       可以用赋值来显式设置枚举量的值
+       enum bits{one=1, two=2};
+4.数组的静态联编和静态联编： int a[100]  &&　　 int size; cin>>size; int * a=new int [size];
+5.使用new创建动态结构：
+  inflatable * ps=new inflatable;
+6.数组的替代品：
+   vector模板类：类似于string 类， 也是一种动态数组；#include<vector>  vector<int> a[4];
+   array模板类：长度固定数组，比vector类效率高，C++11才支持; #include<array> array<int ,4> a={3,2,34,4}; 可以允许a[-2];
+7. 类型别名： typedef typename aliasname; 一个类型可以同时创建多个别名。
+8. 循环文本输入：
+   cin： 只有按下enter键后，字符才会被送到输入流中，这导致可以再输入结束符之后输入其他字符，只是没有存入而已
+   cin.get(ch)：读取输入中的下一个字符（包括空格）,赋给ch,
+   char ch;
+   char * data;
+   unsigned int i=0;
+   data=new char[100];
+   cin.get(ch);
+   while(ch!='\n')
+   {
+    *data+i=ch;
+    i++;
+    cin.get(ch);
+   }
+  9. EOF结束输入：
+  cin.get(ch);
+   while(!cin.fail())// while(cin)// while(ch!=EOF)
+   {
+   ...
+   cin.get(ch);
+   }
+   
+  10. 字符函数库：cctype;#include<cctype>;
+      isalpha(ch) ：检查ch是否为字符： 因为and/or格式假设输入的字符编码都是连续的，其他的字符都不在这个范围内，这种
+  假设对ascll代码是成立的，但通常并不成立
+      isdigits(ch)：检查ch是否为数字字符;
+      isspace(ch)：检查是否为空白，如换行符，空格和制表符；
+      ispunct(ch)：测试字符是否为标点符号。
+  11. 读取数字的循环：
+      const int max=5;
+      int golf[max];
+      int i;
+      for (i=0;i<max;i++)
+      {
+        while(!(cin>>golf[i])) 
+        {
+          cin.clear(); //输入结束符时候清除流中的数据
+          while(cin.get()!='\n') //按下enter键才重新输入
+          continue;
+        }
+      }
+12. 读取文本文件:
+    #include<fstream>
+    #include<cstdlib>// support for exit()
+    ifstream infile;
+    infile.open(filename);
+    if(!infile.is_open())
+    {
+      cout<<"can't open the file, program terminating \n";
+      exit(EXIT_FALURE);
+    }
+    double value;
+    double sum=0.0;
+    int count=0;
+    infile>>value;
+    while(infile.good())// while input good and not at EOF;
+   {
+    count++;
+    sum+=value;
+    infile>>value; // get next value;
+    // 也可以用infile.getline(value);
+   }
+   
+   if (infile.eof())
+   {
+    cout<<"End of file reached"<<endl; 
+  }
+  else if (infile.fail())
+  {
+    cout<<"Input terminated by data mismatch"<<endl;
+  }
+  else 
+    cout<<"Input terminated for unknown reason"<<endl;
+  if (count==0)
+  {
+    cout<<"no data processed"<<endl;
+  }
+  infile.close(); // infile.open() 与 infile.close()配套使用
+  
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
