@@ -19,7 +19,7 @@
   inflatable * ps=new inflatable;
 6.数组的替代品：
    vector模板类：类似于string 类， 也是一种动态数组；#include<vector>  vector<int> a[4];
-   array模板类：长度固定数组，比vector类效率高，C++11才支持; #include<array> array<int ,4> a={3,2,34,4}; 可以允许a[-2];
+   array模板类：长度固定数组，比vector类效率高，C++11才支持; #include<array> std::array<int ,4> a={3,2,34,4}; 可以允许a[-2];
 7. 类型别名： typedef typename aliasname; 一个类型可以同时创建多个别名。
 8. 循环文本输入：
    cin： 只有按下enter键后，字符才会被送到输入流中，这导致可以再输入结束符之后输入其他字符，只是没有存入而已
@@ -99,9 +99,75 @@
     cout<<"no data processed"<<endl;
   }
   infile.close(); // infile.open() 与 infile.close()配套使用
-  
-   
-   
+
+13. 函数原型： 描述函数到编译器的接口，将函数的返回值，以及参数的类型和数量告诉编译器；
+14.构思程序时将存储属性和操作结合起来朝着OOP思想迈进。
+15.尽可能使用const：可以避免由于无意间修改数据而导致的编程错误
+                    可以使得函数能够处理const和非const实参，否则就只能接受非const数据。
+16. c-风格字符串：与char数组的区别在于自带空字符结束符，如“aga”;
+17. 递归：函数自己调用自己，c可以main()递归，c++不允许；
+18. 函数指针：类似于数据项，函数也是有地址的，是存储其机器代码的内存的开始地址，将函数的地址作为参数传给另一个函数，
+    这样允许在不同的时间传递不同函数的地址，在不同的时间使用不同的函数，比直接调用灵活。只需修改函数地址就可以了。
+    函数名就是函数的地址，声明函数指针，需要指明函数返回值和参数列表如：
+    int fun(int); 
+    int （* pf）(int); pf=fun;
+    (*pf)(4);  // or pf(4);
+19. 自动推断类型功能：auto pf=functionname; c++11支持；
+20. 函数数组指针： * pf[3]; [] 优先级大于* 函数指针数组：(*pf)[3];
+21. 使用typedef简化函数指针的定义：
+    typedef const double *(*p_fun) (const double *, int);
+    p_fun p1=f1;
+22. 内联函数：常规函数调用是使得程序跳到另一个地址（函数的地址）中，内联函数是将程序嵌入到调用的地方，需要更多的内存
+    通常省略原型， 直接定义,如： inline double add(double x, double y){return x+y;} 按值传递，比宏定义要高。
+23. 宏定义：#define SQUARE(x) x*x; 如果是SQUARE(i++); 则i将递增两次，而内联函数则是一次。
+24. 引用变量：主要用途是用作函数的形参（数据比较大时），函数将使用原始数据而不是其副本，如 int a; int &same=a; 
+              这里&不是地址运算符，而是类型标识的一部分，就像char * 中的*一样。
+25. 左值引用：左值：指那些能够通过访问地址来修改其值的变量， 非左值：字面常量，由引号括起的字符串除外，因为它们由地址表示
+    后面有右值引用，c++11支持，使用&&申明，
+    double &&rref=std::sqrt(36.00); //这用左值引用是行不通的
+    std::cout<<rref<<endl;
+    右值引用使得操作更有效实现，可以实现移动语义；
+26. 函数中不可以返回临时变量的引用，因为临时变量的作用域只是限于函数内部。
+27. 默认参数：必须在函数的参数列表中从右到左添加默认值
+28. 函数重载：将非const值赋给const值是合法的，但是反之就是非法的。有时候可以通过默认参数来减少函数重载
+29. 重载引用参数：类设计和STL经常使用引用参数：
+    void staff(double &rs1);
+    void staff(const double &rs2);
+    void staff(double &&r3);
+    dobule x=55.5;
+    const double y=32.5;
+    staff(x); // call staff(double & rs1);
+    staff(y); //call staff(const double &rs2)
+    staff(x+y); // call staff(double &&rs3);
+30. 函数模板：使用泛型来定义函数，其中的泛型可以用具体的类型来替代。也被称为通用编程，模板特性也称为参数化类型
+  template<class/typename Type>
+  void swap(Type &a, Type &b)
+  {
+    Type temp;
+    temp=a;
+    a=b;
+    b=temp;
+  }
+  原型的申明规则跟一般函数一样，只是多了一个template<class Type>在前面。
+31. 重载模板： 像重载常规函数定义那样.参数列表变了。参数不一定都要是泛型的。如：
+    template<class Type>
+    void swap(Type &a, Type &b){}
+    template<class Type>
+    void swap(Type &a, Type &b,int n){}
+32. 模板的局限性：
+    （1）若模板函数定义了赋值=，但是Type为数组类型，那么将不成立；
+    （2）若模板定义了<,但是Type是结构，那么不成立
+    （3）若模板定义了*，但Type是数组，指针或结构，那么不成立。
+    解决的方案：
+    （1）重载运算符；
+    （2）为特定的类型提供具体化的模板定义。
+33. 显示具体化：具体化函数定义，当编译器找到与函数调用相匹配的具体化定义时将采用，而不用模板，
+    一些规则总结： （1）对于给定的函数，可以有非模板函数，模板函数和显式具体化模板函数以及它们的重载版本。
+                   （2）显示具体化的原型和定义都应该以template<>开头，并通过名称来指出类型。
+                   （3）优先级： 非模板函数>具体化函数>常规模板函数
+34. 
+    
+
    
    
    
