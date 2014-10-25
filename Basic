@@ -165,7 +165,42 @@
     一些规则总结： （1）对于给定的函数，可以有非模板函数，模板函数和显式具体化模板函数以及它们的重载版本。
                    （2）显示具体化的原型和定义都应该以template<>开头，并通过名称来指出类型。
                    （3）优先级： 非模板函数>具体化函数>常规模板函数
-34. 
+    template<> void swap<job>(job & a, job & b){} // or template<> void swap(job &a, job &b){}
+34. 实例化和具体化：
+    模板不会生成函数定义，它只是一个用于生成函数的定义的方案，编译器使用模板为特定类型生成函数定义时，得到的是模板实例
+    (1)一般调用含有特定类型参数的模板函数时，是隐式实例化；
+    (2)还可以显式实例化：申明所需的种类——用<>符号指示类型，并在声明前加上template：
+       template void swap<int> (int, int); // 与显式具体化不同，就在于template后面有没有<>,而且显示式具体化是告诉编译器不用使用模板函数
+35. 在同一个文件中使用相同类型的显式具体化和显式实例将出错。
+36. 具体化和实例化的例子：
+    template<class Type>
+    void swap(Type &a, Type &b);
+    template<> void swap<job>(job &a,job &b);
+    int main()
+    {
+      template void swap<job>(job &, job &);
+      short a,b;
+      swap(a,b); // implicit template instantiation for short//隐式实例化
+      job n,m;
+      swap(n,m); // use explicit specialization for job //显式具体化
+      char g,h;
+      swap(g,h); // use explicit template instantiation for char;//显式实例化
+      return 0;
+    }
+37. 重载解析：
+   （1）创建候选函数列表，包含于被调用函数的名称相同的函数和模板函数
+   （2）使用候选函数列表创建可行函数列表，都是参数数目正确的函数，有一个隐式转换序列，其中包括实参类型与相应的形参类型
+        完全匹配的情况，例如float参数可以转换为double参数
+   （3）确定是否有最佳的可行函数，如果有，则使用它，如果没有，则该函数调用出错
+38. 函数匹配最佳到最差顺序：
+    （1） 完全匹配，但常规函数优先于模板
+    （2）提升转换，例如char和short自动转换为int,float自动转换为double
+    （3）标准转换
+    （4）用户定义的转换，如类声明中定义的转换
+39. 最具体： 不一定意味着显式具体化，而是指编译器推断使用哪种类型时执行的转换最少。
+40. template<class Type>void 
+    
+    
     
 
    
